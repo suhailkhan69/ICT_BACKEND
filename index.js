@@ -1,11 +1,18 @@
 const express = require("express");
-const session = require("express-session")
 const donor = require("./model/donor");
+require('dotenv').config()
+const usersRouter = require('./controllers/users')
+const loginRouter = require('./controllers/login')
+const jwt = require('jsonwebtoken')
+
 const app = new express();
-const passport = require("passport");
-const bodyParser = require("body-parser");
-const LocalStrategy = require("passport-local");
-const passportLocalMongoose =  require("passport-local-mongoose");
+const getTokenFrom = request => {
+    const authorization = request.get('authorization')
+    if (authorization && authorization.startsWith('Bearer ')) {
+      return authorization.replace('Bearer ', '')
+    }
+    return null
+  }
 
 var cors = require('cors');
 app.use(cors());
@@ -24,6 +31,9 @@ app.get("/user/view",async (req,res)=>{
        var result = await donor.find({});
        res.json(result);
     })
+    app.use('/users', usersRouter)
+    app.use('/login', loginRouter)
+
  app.post("/admin/update",async (req,res)=>{
         var result = await donor.findByIdAndUpdate(req.body._id,req.body);
         res.send("success");
@@ -33,7 +43,7 @@ app.get("/user/view",async (req,res)=>{
         res.send("deleted");
     })
 
-    
+    const PORT = process.env.PORT || 6901
     
 app.listen(6901,()=>{
     console.log("server running at port 6901")
