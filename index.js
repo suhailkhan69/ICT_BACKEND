@@ -35,6 +35,7 @@ app.get("/user/view",async (req,res)=>{
     app.use('/login', loginRouter)
 
  app.post("/admin/update",async (req,res)=>{
+        
         var result = await donor.findByIdAndUpdate(req.body._id,req.body);
         res.send("success");
     })
