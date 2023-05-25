@@ -6,11 +6,12 @@ const User = require('../model/user')
 
 loginRouter.post('/', async (request, response) => {
   const { userEmail, userPassword } = request.body
-    console.log(userEmail)
+    //console.log(userEmail)
+    console.log(request.body)
   try{
   const user = await User.findOne({ userEmail : userEmail })
   console.log(`the user is ${user}`)
-  console.log(`the password is ${user.userPassword}`)
+ // console.log(`the password is ${user.userPassword}`)
   const passwordCorrect = user === null
     ? false
     : await bcrypt.compare(userPassword, user.userPassword)
@@ -34,7 +35,7 @@ loginRouter.post('/', async (request, response) => {
     .send({ token, user: user})
     }
     catch(err){
-      console.log(error)
+      console.log(err)
     }
 })
 
